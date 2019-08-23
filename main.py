@@ -43,7 +43,7 @@ class Folder():
             else:
                 file_size = os.path.getsize(self.folder + "\\\\" + file)
 
-                temp_timestamp = os.path.getctime(self.folder + "\\\\" + file)
+                temp_timestamp = os.path.getmtime(self.folder + "\\\\" + file)
                 file_datecreated = datetime.fromtimestamp(temp_timestamp).strftime('%Y-%m-%d %H:%M:%S')
 
                 extension_type = os.path.splitext(self.folder + "\\\\" + file)[1]
@@ -55,8 +55,8 @@ class Folder():
 
 def remove_file(file_path):
     '''
-
-    :param file_path:
+    Disable "Read-Only" from the given file and delete it.
+    :param file_path: File path to the file to remove
     :return:
     '''
     os.chmod(file_path, stat.S_IWRITE)
@@ -84,18 +84,27 @@ if __name__ == '__main__':
 
     for file_firstfolder in first_folder.files_info.keys():
         for file_secondfolder in second_folder.files_info.keys():
-            if file_firstfolder == file_secondfolder:
-                print(f'The file "{file_firstfolder}" is the same the both folders.')
+            # Now, it will be checked if the files informations (name, size, and date) are the same
+            if file_firstfolder == file_secondfolder and \
+                    first_folder.files_info[file_firstfolder][1] == second_folder.files_info[file_secondfolder][1] and \
+                    first_folder.files_info[file_firstfolder][2] == second_folder.files_info[file_secondfolder][2]:
 
-                if len(first_folder.files_info.keys()) > len(second_folder.files_info.keys()):
-                    remove_file(second_folder.files_info[file_secondfolder][3])
+                folder_to_delete = eg.buttonbox(msg="The file '{}' is the same the both folders. "
+                                                "The first folder as {} files and the second folder as {} "
+                                                "files.".format(file_firstfolder, len(first_folder.files_info.keys()),
+                                                                len(second_folder.files_info.keys())),
+                             choices=["Delete file from first folder", "Delete file form second folder"],
+                             title="Delete file")
 
-                else:
-                    os.remove(first_folder.files_info[file_firstfolder][3])
+                if folder_to_delete == "Delete file from first folder":
                     remove_file(first_folder.files_info[file_firstfolder][3])
+                elif folder_to_delete == "Delete file form second folder":
+                    remove_file(second_folder.files_info[file_secondfolder][3])
+                else:
+                    print("No file was deleted.")
+                    pass
 
             else: pass
 
 
     print("Done!")
-
