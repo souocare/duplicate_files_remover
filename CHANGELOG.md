@@ -10,6 +10,7 @@
 * No excpetions errors handeling. Will be added in one of the next versions
 * Add more ways to check if files are the same 
 * Better GUI and Progress Bar
+* Create executable file for easier use.
 
 
 ## &rightarrow; 0.1
